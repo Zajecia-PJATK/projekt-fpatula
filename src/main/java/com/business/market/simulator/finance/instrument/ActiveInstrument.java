@@ -1,19 +1,24 @@
 package com.business.market.simulator.finance.instrument;
 
+import com.business.market.simulator.finance.transaction.MarketTransaction;
 import com.business.market.simulator.user.User;
-import com.business.market.simulator.utils.BigDecimalToStringConverter;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.math.BigDecimal;
+import java.util.Set;
 
 @Data
-@Entity
-@SecondaryTable(name = ActiveInstrument.TABLE_NAME)
-public abstract class ActiveInstrument extends FinancialInstrument implements Tradeable {
-    static final String TABLE_NAME = "active_instruments";
-    @Convert(converter = BigDecimalToStringConverter.class)
-    private BigDecimal askPrice;
+@Entity(name = "active_instruments")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public abstract class ActiveInstrument implements Tradeable {
+    @Id
+    private Long activeInstrumentId;
+    @Enumerated(EnumType.STRING)
+    private InstrumentType type;
+    @ManyToOne
+    private FinancialInstrument financialInstrument;
     @ManyToOne
     private User currentInstrumentOwner;
+    @OneToMany
+    private Set<MarketTransaction> instrumentTransactions;
 }

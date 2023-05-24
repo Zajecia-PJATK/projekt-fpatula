@@ -4,7 +4,7 @@ import jakarta.persistence.AttributeConverter;
 
 import java.math.BigDecimal;
 
-public class BigDecimalToStringConverter implements AttributeConverter<BigDecimal,String> {
+public class BigDecimalToStringConverter implements AttributeConverter<BigDecimal, String> {
     @Override
     public String convertToDatabaseColumn(BigDecimal attribute) {
         return attribute.toString();

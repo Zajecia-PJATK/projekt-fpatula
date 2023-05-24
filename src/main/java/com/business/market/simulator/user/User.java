@@ -1,6 +1,7 @@
 package com.business.market.simulator.user;
 
 import com.business.market.simulator.finance.instrument.ActiveInstrument;
+import com.business.market.simulator.finance.transaction.MarketTransaction;
 import com.business.market.simulator.utils.BigDecimalToStringConverter;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -9,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-@Entity(name="users")
+@Entity(name = "users")
 public class User {
     @Id
     private long userId;
@@ -19,4 +20,6 @@ public class User {
     private BigDecimal balance;
     @OneToMany
     private List<ActiveInstrument> ownedInstruments;
+    @ManyToMany(mappedBy = "transaction_participants")
+    private List<MarketTransaction> userTransactions;
 }
