@@ -1,16 +1,20 @@
 package com.business.market.simulator.finance.owner;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Entity
+@SuperBuilder
+@NoArgsConstructor
+@Entity(name = "owners")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Owner {
     @Id
     private long ownerId;
+    @Column(nullable = false, unique = true)
+    private String ownerName;
     @Enumerated(EnumType.STRING)
     private OwnerType ownerType;
 }
