@@ -1,10 +1,12 @@
 package com.business.market.simulator.finance.instrument;
 
+import com.business.market.simulator.finance.instrument.aspects.Tradeable;
 import com.business.market.simulator.finance.transaction.MarketTransaction;
 import com.business.market.simulator.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -20,5 +22,5 @@ public abstract class ActiveInstrument implements Tradeable {
     @ManyToOne
     private User currentInstrumentOwner;
     @OneToMany
-    private Set<MarketTransaction> instrumentTransactions;
+    private Set<MarketTransaction> instrumentTransactions = new HashSet<>();
 }
