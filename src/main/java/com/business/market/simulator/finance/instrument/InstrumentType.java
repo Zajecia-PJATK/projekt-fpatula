@@ -1,5 +1,5 @@
 package com.business.market.simulator.finance.instrument;
 
 public enum InstrumentType {
-    SHARE
+    SHARE, TREASURY_BOND, INDEX
 }
