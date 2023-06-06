@@ -1,6 +1,6 @@
 package com.business.market.simulator.user;
 
-import com.business.market.simulator.finance.instrument.ActiveInstrument;
+import com.business.market.simulator.finance.instrument.active.ActiveInstrument;
 import com.business.market.simulator.finance.transaction.MarketTransaction;
 import com.business.market.simulator.utils.BigDecimalToStringConverter;
 import jakarta.persistence.*;
@@ -26,22 +26,44 @@ public class User {
     @ManyToMany(mappedBy = "transactionParticipants")
     private List<MarketTransaction> userTransactions = new ArrayList<>(0);
 
-    public void addToBalance(double value) throws IllegalArgumentException {
-        if (value < 0) {
-            throw new IllegalArgumentException("Value added to balance can't be a negative number");
+    private class UserOperations{
+        public void addToBalance(double value) throws IllegalArgumentException {
+            if (value < 0) {
+                throw new IllegalArgumentException("Value added to balance can't be a negative number");
+            }
+            balance = balance.add(BigDecimal.valueOf(value));
         }
-        balance = balance.add(BigDecimal.valueOf(value));
+
+        public void addToBalance(BigDecimal value) throws IllegalArgumentException {
+            if (value.doubleValue() < 0) {
+                throw new IllegalArgumentException("Value added to balance can't be a negative number");
+            }
+            balance = balance.add(value);
+        }
+
+        public BigDecimal withdrawBalance(double value) throws IllegalArgumentException {
+            if (value < 0) {
+                throw new IllegalArgumentException("Value to withdraw from balance can't be a negative number");
+            }
+            if (value > balance.doubleValue()) {
+                throw new IllegalArgumentException("Value to withdraw can't exceed balance");
+            }
+            BigDecimal subtrahend = BigDecimal.valueOf(value);
+            balance = balance.subtract(subtrahend);
+            return subtrahend;
+        }
+
+        public BigDecimal withdrawBalance(BigDecimal value) throws IllegalArgumentException {
+            double doubleValue = value.doubleValue();
+            if (doubleValue < 0) {
+                throw new IllegalArgumentException("Value to withdraw from balance can't be a negative number");
+            }
+            if (doubleValue > balance.doubleValue()) {
+                throw new IllegalArgumentException("Value to withdraw can't exceed balance");
+            }
+            balance = balance.subtract(value);
+            return value;
+        }
     }
 
-    public BigDecimal withdrawBalance(double value) throws IllegalArgumentException {
-        if (value < 0) {
-            throw new IllegalArgumentException("Value to withdraw from balance can't be a negative number");
-        }
-        if (value > balance.doubleValue()) {
-            throw new IllegalArgumentException("Value to withdraw can't exceed balance");
-        }
-        BigDecimal subtrahend = BigDecimal.valueOf(value);
-        balance = balance.subtract(subtrahend);
-        return subtrahend;
-    }
 }
