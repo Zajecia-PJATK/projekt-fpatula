@@ -1,7 +1,7 @@
 package com.business.market.simulator.finance.transaction;
 
 
-import com.business.market.simulator.finance.instrument.ActiveInstrument;
+import com.business.market.simulator.finance.instrument.active.ActiveInstrument;
 import com.business.market.simulator.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
