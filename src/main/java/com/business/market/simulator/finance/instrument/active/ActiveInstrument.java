@@ -1,6 +1,8 @@
-package com.business.market.simulator.finance.instrument;
+package com.business.market.simulator.finance.instrument.active;
 
-import com.business.market.simulator.finance.instrument.aspects.Tradeable;
+import com.business.market.simulator.finance.instrument.FinancialInstrument;
+import com.business.market.simulator.finance.instrument.InstrumentType;
+import com.business.market.simulator.finance.instrument.aspect.Tradeable;
 import com.business.market.simulator.finance.transaction.MarketTransaction;
 import com.business.market.simulator.user.User;
 import jakarta.persistence.*;
