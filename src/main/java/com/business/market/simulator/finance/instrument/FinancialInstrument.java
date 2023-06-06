@@ -1,5 +1,6 @@
 package com.business.market.simulator.finance.instrument;
 
+import com.business.market.simulator.finance.instrument.active.ActiveInstrument;
 import com.business.market.simulator.finance.owner.Owner;
 import jakarta.persistence.*;
 import lombok.Data;
