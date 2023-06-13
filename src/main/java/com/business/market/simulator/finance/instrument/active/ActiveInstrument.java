@@ -16,6 +16,7 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class ActiveInstrument implements Tradeable {
     @Id
+    @GeneratedValue
     private Long activeInstrumentId;
     @Enumerated(EnumType.STRING)
     private InstrumentType type;
