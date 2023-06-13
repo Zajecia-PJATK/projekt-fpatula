@@ -11,6 +11,7 @@ public abstract class Derivative implements Tradeable {
     @Id
     @GeneratedValue
     private Long derivativeId;
+    private String symbol;
     @Enumerated(EnumType.STRING)
     private DerivativeType derivativeType;
 }

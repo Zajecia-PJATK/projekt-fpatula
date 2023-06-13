@@ -1,29 +1,22 @@
 package com.business.market.simulator.finance.instrument.derivative.type;
 
 import com.business.market.simulator.finance.instrument.derivative.Derivative;
-import com.business.market.simulator.finance.transaction.MarketTransaction;
+import com.business.market.simulator.finance.instrument.derivative.DerivativeType;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.math.BigDecimal;
+import java.util.Set;
 
-@Getter
-@Setter
+@EqualsAndHashCode(callSuper = true)
+@Data
 @Entity
 public class Index extends Derivative {
-    @Override
-    public MarketTransaction buyInstrument() {
-        return null;
+    public Index() {
+        super();
+        this.setDerivativeType(DerivativeType.INDEX);
     }
-
-    @Override
-    public MarketTransaction sellInstrument() {
-        return null;
-    }
-
-    @Override
-    public BigDecimal getCurrentMarketValue() {
-        return super.getCurrentMarketValue();
-    }
+    @ElementCollection
+    private Set<Long> instrumentsIds;
 }
