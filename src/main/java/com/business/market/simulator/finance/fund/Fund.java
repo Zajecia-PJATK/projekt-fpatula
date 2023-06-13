@@ -13,6 +13,4 @@ public abstract class Fund {
     @Id
     private Long fundId;
     private String fundName;
-    //TODO add fund participants and what is needed
-
 }
