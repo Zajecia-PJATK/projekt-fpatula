@@ -1,6 +1,9 @@
 package com.business.market.simulator.finance.fund;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import lombok.Data;
 
 @Data
@@ -9,5 +12,7 @@ import lombok.Data;
 public abstract class Fund {
     @Id
     private Long fundId;
+    private String fundName;
+    //TODO add fund participants and what is needed
 
 }
