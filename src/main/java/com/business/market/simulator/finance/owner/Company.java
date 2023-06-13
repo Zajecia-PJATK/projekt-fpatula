@@ -1,5 +1,6 @@
 package com.business.market.simulator.finance.owner;
 
+import com.business.market.simulator.finance.transaction.entity.LegalEntity;
 import com.business.market.simulator.utils.BigDecimalToStringConverter;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -9,13 +10,13 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Data
-@SuperBuilder
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class Company extends Owner {
+public class Company extends Owner implements LegalEntity {
     public Company(OwnerType ownerType) {
         super();
         if (!(ownerType.equals(OwnerType.JSC) || ownerType.equals(OwnerType.PLC))) {
@@ -24,7 +25,6 @@ public class Company extends Owner {
         setOwnerType(ownerType);
     }
 
-    //TODO add calculate methods
     @Convert(converter = BigDecimalToStringConverter.class)
     BigDecimal equityCapital;
     @Convert(converter = BigDecimalToStringConverter.class)
@@ -33,4 +33,27 @@ public class Company extends Owner {
     BigDecimal loses;
     @Convert(converter = BigDecimalToStringConverter.class)
     BigDecimal dividendsPerShare;
+
+    public BigDecimal getCompanyProfit() {
+        return new CompanyHelper().calculateProfit();
+    }
+
+    public BigDecimal getBookValue() {
+        return new CompanyHelper().getBookValue();
+    }
+
+    @Override
+    public Long getEntityId() {
+        return getOwnerId();
+    }
+
+    private class CompanyHelper {
+        public BigDecimal calculateProfit() {
+            return income.subtract(loses);
+        }
+
+        public BigDecimal getBookValue() {
+            return equityCapital.divide(BigDecimal.valueOf(getOwnerFinancialInstruments().size()), RoundingMode.HALF_UP);
+        }
+    }
 }
