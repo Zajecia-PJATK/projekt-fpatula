@@ -9,5 +9,5 @@ import lombok.Setter;
 @Setter
 @Entity
 public class InvestmentFund extends Fund {
-
+//TODO add join with financial instrument
 }
