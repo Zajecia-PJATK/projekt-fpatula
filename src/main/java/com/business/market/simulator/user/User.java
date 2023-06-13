@@ -2,6 +2,7 @@ package com.business.market.simulator.user;
 
 import com.business.market.simulator.finance.instrument.active.ActiveInstrument;
 import com.business.market.simulator.finance.transaction.MarketTransaction;
+import com.business.market.simulator.finance.transaction.entity.LegalEntity;
 import com.business.market.simulator.utils.BigDecimalToStringConverter;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -12,8 +13,9 @@ import java.util.List;
 
 @Data
 @Entity(name = "users")
-public class User {
+public class User implements LegalEntity {
     @Id
+    @GeneratedValue
     private long userId;
     @Column(nullable = false, unique = true)
     private String username;
@@ -21,12 +23,18 @@ public class User {
     private String passwordHash;
     @Convert(converter = BigDecimalToStringConverter.class)
     private BigDecimal balance = new BigDecimal(0);
+    private boolean isDeleted = false;
     @OneToMany
     private List<ActiveInstrument> ownedInstruments = new ArrayList<>(0);
     @ManyToMany(mappedBy = "transactionParticipants")
     private List<MarketTransaction> userTransactions = new ArrayList<>(0);
 
-    private class UserOperations{
+    @Override
+    public Long getEntityId() {
+        return userId;
+    }
+
+    public class UserOperations {
         public void addToBalance(double value) throws IllegalArgumentException {
             if (value < 0) {
                 throw new IllegalArgumentException("Value added to balance can't be a negative number");
