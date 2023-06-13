@@ -1,10 +1,7 @@
 package com.business.market.simulator.finance.instrument.derivative;
 
 import com.business.market.simulator.finance.instrument.aspect.Tradeable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -12,7 +9,8 @@ import lombok.Data;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Derivative implements Tradeable {
     @Id
+    @GeneratedValue
     private Long derivativeId;
-
-
+    @Enumerated(EnumType.STRING)
+    private DerivativeType derivativeType;
 }
