@@ -20,7 +20,9 @@ class MarketSimulatorApplicationTests {
     ActiveInstrumentRepository activeInstrumentRepository;
     @Autowired
     FinancialInstrumentRepository financialInstrumentRepository;
-    @Autowired FinanceService financeService;
+    @Autowired
+    FinanceService financeService;
+
     @Test
     void contextLoads() {
     }
@@ -29,6 +31,7 @@ class MarketSimulatorApplicationTests {
     @Transactional
     void getShareMarketValue() {
         FinancialInstrument financialInstrument = new FinancialInstrument();
+        financialInstrument.setSymbol("TEST");
         financialInstrumentRepository.save(financialInstrument);
         Share firstShare = new Share();
         firstShare.setAskPrice(BigDecimal.TWO);
@@ -38,7 +41,7 @@ class MarketSimulatorApplicationTests {
         financialInstrument.addActiveInstrument(secondShare);
         activeInstrumentRepository.save(firstShare);
         activeInstrumentRepository.save(secondShare);
-        Assertions.assertEquals(BigDecimal.ONE,financeService.getMarketValue(firstShare));
+        Assertions.assertEquals(BigDecimal.ONE, financeService.getMarketValue(firstShare));
     }
 
 }
