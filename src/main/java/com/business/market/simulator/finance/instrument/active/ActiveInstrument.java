@@ -22,8 +22,17 @@ public abstract class ActiveInstrument implements Tradeable {
     private InstrumentType type;
     @ManyToOne
     private FinancialInstrument financialInstrument;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private User currentInstrumentOwner;
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Set<MarketTransaction> instrumentTransactions = new HashSet<>();
+
+    public void changeCurrentInstrumentOwner(User newOwner) {
+        currentInstrumentOwner.getOwnedInstruments().remove(this);
+        currentInstrumentOwner = newOwner;
+        newOwner.getOwnedInstruments().add(this);
+    }
+    public void addTransaction(MarketTransaction marketTransaction){
+        instrumentTransactions.add(marketTransaction);
+    }
 }
