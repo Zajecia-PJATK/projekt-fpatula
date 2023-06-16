@@ -6,6 +6,7 @@ import com.business.market.simulator.finance.transaction.entity.LegalEntity;
 import com.business.market.simulator.utils.BigDecimalToStringConverter;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -22,16 +23,24 @@ public class User implements LegalEntity {
     @Column(nullable = false)
     private String passwordHash;
     @Convert(converter = BigDecimalToStringConverter.class)
+    @EqualsAndHashCode.Exclude
     private BigDecimal balance = new BigDecimal(0);
+    @EqualsAndHashCode.Exclude
     private boolean isDeleted = false;
     @OneToMany
+    @EqualsAndHashCode.Exclude
     private List<ActiveInstrument> ownedInstruments = new ArrayList<>(0);
     @ManyToMany(mappedBy = "transactionParticipants")
+    @EqualsAndHashCode.Exclude
     private List<MarketTransaction> userTransactions = new ArrayList<>(0);
 
     @Override
-    public Long getEntityId() {
-        return userId;
+    public String getEntityId() {
+        return "U" + userId;
+    }
+
+    public boolean equalsUserId(User user) {
+        return this.userId == user.userId;
     }
 
     public class UserOperations {
@@ -43,7 +52,7 @@ public class User implements LegalEntity {
         }
 
         public void addToBalance(BigDecimal value) throws IllegalArgumentException {
-            if (value.doubleValue() < 0) {
+            if (value.signum() < 0) {
                 throw new IllegalArgumentException("Value added to balance can't be a negative number");
             }
             balance = balance.add(value);
@@ -71,6 +80,10 @@ public class User implements LegalEntity {
             }
             balance = balance.subtract(value);
             return value;
+        }
+
+        public boolean canWithdraw(BigDecimal value) {
+            return balance.subtract(value).signum() != -1;
         }
     }
 

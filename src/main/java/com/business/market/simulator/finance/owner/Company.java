@@ -1,6 +1,5 @@
 package com.business.market.simulator.finance.owner;
 
-import com.business.market.simulator.finance.transaction.entity.LegalEntity;
 import com.business.market.simulator.utils.BigDecimalToStringConverter;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -15,15 +14,7 @@ import java.math.RoundingMode;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class Company extends Owner implements LegalEntity {
-    public Company(OwnerType ownerType) {
-        super();
-        if (!(ownerType.equals(OwnerType.JSC) || ownerType.equals(OwnerType.PLC))) {
-            throw new IllegalArgumentException();
-        }
-        setOwnerType(ownerType);
-    }
-
+public class Company extends Owner {
     @Convert(converter = BigDecimalToStringConverter.class)
     BigDecimal equityCapital;
     @Convert(converter = BigDecimalToStringConverter.class)
@@ -32,6 +23,13 @@ public class Company extends Owner implements LegalEntity {
     BigDecimal loses;
     @Convert(converter = BigDecimalToStringConverter.class)
     BigDecimal dividendsPerShare;
+    public Company(OwnerType ownerType) {
+        super();
+        if (!(ownerType.equals(OwnerType.JSC) || ownerType.equals(OwnerType.PLC))) {
+            throw new IllegalArgumentException();
+        }
+        setOwnerType(ownerType);
+    }
 
     public BigDecimal getCompanyProfit() {
         return new CompanyHelper().calculateProfit();
@@ -42,8 +40,8 @@ public class Company extends Owner implements LegalEntity {
     }
 
     @Override
-    public Long getEntityId() {
-        return getOwnerId();
+    public String getEntityId() {
+        return "C" + getOwnerId();
     }
 
     private class CompanyHelper {
