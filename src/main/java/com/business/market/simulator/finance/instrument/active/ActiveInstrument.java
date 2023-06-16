@@ -8,8 +8,8 @@ import com.business.market.simulator.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity(name = "active_instruments")
@@ -25,7 +25,7 @@ public abstract class ActiveInstrument implements Tradeable {
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private User currentInstrumentOwner;
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private Set<MarketTransaction> instrumentTransactions = new HashSet<>();
+    private List<MarketTransaction> instrumentTransactions = new ArrayList<>();
 
     public void changeCurrentInstrumentOwner(User newOwner) {
         currentInstrumentOwner.getOwnedInstruments().remove(this);
