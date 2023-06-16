@@ -30,4 +30,12 @@ public class MarketTransaction {
     private Set<User> transactionParticipants = new HashSet<>(2, 1);
     private String buyerId;
     private String sellerId;
+
+    public void addParticipant(User user) {
+        transactionParticipants.add(user);
+    }
+    public void addTargetInstrument(ActiveInstrument targetInstrument){
+        this.targetInstrument = targetInstrument;
+        targetInstrument.addTransaction(this);
+    }
 }
