@@ -27,8 +27,8 @@ public class MarketAlgorithmService {
 
     private final static double[] treasuryBondOperationChances = new double[]{0.1, 0.4};
     private final static Random random = new Random();
-    private static double[] shareSellFactors = new double[]{0.7, 1.4};
-    private static double priceIncreaseFactor = 1.5;
+    private final static double[] shareSellFactors = new double[]{0.7, 1.4};
+    private final static double priceIncreaseFactor = 1.5;
     @Getter
     @Setter
     private static double simulationsSpeed = 1.0;
@@ -59,14 +59,12 @@ public class MarketAlgorithmService {
 
     private Map<String, List<Share>> getSharesGrouped(Collection<ActiveInstrument> activeInstruments) {
         List<Share> shares = activeInstruments.stream().filter(activeInstrument -> activeInstrument instanceof Share).map(activeInstrument -> (Share) activeInstrument).toList();
-        Map<String, List<Share>> sharesGrouped = getActiveInstrumentsGroupedBySymbol(shares);
-        return sharesGrouped;
+        return getActiveInstrumentsGroupedBySymbol(shares);
     }
 
     private Map<String, List<TreasuryBond>> getTreasuryBondGrouped(Collection<ActiveInstrument> activeInstruments) {
         List<TreasuryBond> treasuryBonds = activeInstruments.stream().filter(activeInstrument -> activeInstrument instanceof TreasuryBond).map(activeInstrument -> (TreasuryBond) activeInstrument).toList();
-        Map<String, List<TreasuryBond>> treasuryBondsGrouped = getActiveInstrumentsGroupedBySymbol(treasuryBonds);
-        return treasuryBondsGrouped;
+        return getActiveInstrumentsGroupedBySymbol(treasuryBonds);
     }
 
     private <T extends ActiveInstrument> Map<String, List<T>> getActiveInstrumentsGroupedBySymbol(Collection<T> activeInstruments) {
