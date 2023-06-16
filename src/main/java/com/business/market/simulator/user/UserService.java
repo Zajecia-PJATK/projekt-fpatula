@@ -46,4 +46,8 @@ public class UserService {
         return user.getUserTransactions();
     }
 
+    public List<User> getUsersContaining(String containingString) {
+        return userRepository.findByUsernameContaining(containingString);
+    }
+
 }
