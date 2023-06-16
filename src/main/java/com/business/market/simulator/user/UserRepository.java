@@ -12,6 +12,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
 
     boolean deleteUserByUserId(Long userId);
-
+    @EntityGraph(attributePaths = {"ownedInstruments"})
     List<User> findByUsernameContaining(String namePart);
 }

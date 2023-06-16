@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @Setter(onMethod_ = {@Autowired})
 @Service
@@ -42,7 +43,7 @@ public class UserService {
         return ownedInstruments.parallelStream().map(ownedInstrument -> financeService.getMarketValue(ownedInstrument)).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public List<MarketTransaction> userTransactions(User user) {
+    public Set<MarketTransaction> userTransactions(User user) {
         return user.getUserTransactions();
     }
 

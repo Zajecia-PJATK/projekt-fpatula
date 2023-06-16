@@ -10,7 +10,9 @@ import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity(name = "users")
@@ -32,7 +34,7 @@ public class User implements LegalEntity {
     private List<ActiveInstrument> ownedInstruments = new ArrayList<>(0);
     @ManyToMany(mappedBy = "transactionParticipants")
     @EqualsAndHashCode.Exclude
-    private List<MarketTransaction> userTransactions = new ArrayList<>(0);
+    private Set<MarketTransaction> userTransactions = new HashSet<>(0);
 
     @Override
     public String getEntityId() {
