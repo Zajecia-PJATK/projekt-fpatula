@@ -14,6 +14,7 @@ public class FinancialInstrument {
     @Id
     @GeneratedValue
     private long instrumentId;
+    @Column(nullable = false, unique = true)
     private String symbol;
     @Enumerated(EnumType.STRING)
     private InstrumentType type;
