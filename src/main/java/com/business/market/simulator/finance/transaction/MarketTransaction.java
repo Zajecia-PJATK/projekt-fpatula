@@ -5,6 +5,7 @@ import com.business.market.simulator.finance.instrument.active.ActiveInstrument;
 import com.business.market.simulator.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -27,6 +28,7 @@ public class MarketTransaction {
             joinColumns = @JoinColumn(name = "transactionId"),
             inverseJoinColumns = @JoinColumn(name = "userId")
     )
+    @EqualsAndHashCode.Exclude
     private Set<User> transactionParticipants = new HashSet<>(2, 1);
     private String buyerId;
     private String sellerId;
