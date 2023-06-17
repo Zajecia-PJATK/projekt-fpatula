@@ -24,6 +24,13 @@ public class UserService {
     public User persistUser(User user) {
         return userRepository.save(user);
     }
+    public User createUser(String username, String password, BigDecimal balance){
+        User user = new User();
+        user.setUsername(username);
+        user.setPasswordHash(password);
+        user.setBalance(balance);
+        return userRepository.save(user);
+    }
 
     public User removeUser(User user) {
         user.setDeleted(true);
@@ -45,6 +52,18 @@ public class UserService {
 
     public Set<MarketTransaction> userTransactions(User user) {
         return user.getUserTransactions();
+    }
+
+    public User withdrawFromUserBalance(User user, BigDecimal amount){
+        User.UserOperations userOperations = user.new UserOperations();
+        userOperations.withdrawBalance(amount);
+        return persistUser(user);
+    }
+
+    public User addToUserBalance(User user, BigDecimal amount){
+        User.UserOperations userOperations = user.new UserOperations();
+        userOperations.addToBalance(amount);
+        return persistUser(user);
     }
 
     public List<User> getUsersContaining(String containingString) {

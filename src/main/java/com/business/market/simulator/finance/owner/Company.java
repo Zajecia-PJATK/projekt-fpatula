@@ -16,13 +16,13 @@ import java.math.RoundingMode;
 @Entity
 public class Company extends Owner {
     @Convert(converter = BigDecimalToStringConverter.class)
-    BigDecimal equityCapital;
+    private BigDecimal equityCapital;
     @Convert(converter = BigDecimalToStringConverter.class)
-    BigDecimal income;
+    private BigDecimal income;
     @Convert(converter = BigDecimalToStringConverter.class)
-    BigDecimal loses;
+    private BigDecimal loses;
     @Convert(converter = BigDecimalToStringConverter.class)
-    BigDecimal dividendsPerShare;
+    private BigDecimal dividendsPerShare;
     public Company(OwnerType ownerType) {
         super();
         if (!(ownerType.equals(OwnerType.JSC) || ownerType.equals(OwnerType.PLC))) {

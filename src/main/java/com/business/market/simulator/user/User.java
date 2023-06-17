@@ -46,30 +46,12 @@ public class User implements LegalEntity {
     }
 
     public class UserOperations {
-        public void addToBalance(double value) throws IllegalArgumentException {
-            if (value < 0) {
-                throw new IllegalArgumentException("Value added to balance can't be a negative number");
-            }
-            balance = balance.add(BigDecimal.valueOf(value));
-        }
 
         public void addToBalance(BigDecimal value) throws IllegalArgumentException {
             if (value.signum() < 0) {
                 throw new IllegalArgumentException("Value added to balance can't be a negative number");
             }
             balance = balance.add(value);
-        }
-
-        public BigDecimal withdrawBalance(double value) throws IllegalArgumentException {
-            if (value < 0) {
-                throw new IllegalArgumentException("Value to withdraw from balance can't be a negative number");
-            }
-            if (value > balance.doubleValue()) {
-                throw new IllegalArgumentException("Value to withdraw can't exceed balance");
-            }
-            BigDecimal subtrahend = BigDecimal.valueOf(value);
-            balance = balance.subtract(subtrahend);
-            return subtrahend;
         }
 
         public BigDecimal withdrawBalance(BigDecimal value) throws IllegalArgumentException {

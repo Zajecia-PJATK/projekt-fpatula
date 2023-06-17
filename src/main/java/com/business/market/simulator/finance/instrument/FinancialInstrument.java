@@ -18,6 +18,8 @@ public class FinancialInstrument {
     private String symbol;
     @Enumerated(EnumType.STRING)
     private InstrumentType type;
+    @Enumerated(EnumType.STRING)
+    private Sector sector;
     @ManyToOne
     private Owner owningCompany;
     @OneToMany

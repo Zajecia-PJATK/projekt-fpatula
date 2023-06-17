@@ -34,21 +34,22 @@ public class ActiveInstrumentService {
     }
 
     @Transactional
-    public TreasuryBond createTreasuryBond(FinancialInstrument financialInstrument, double interest, int termInMonths) throws ActiveInstrumentException {
+    public TreasuryBond createTreasuryBond(FinancialInstrument financialInstrument, BigDecimal initialContractValue, double interest, int termInMonths) throws ActiveInstrumentException {
         if (!financialInstrument.getType().equals(InstrumentType.TREASURY_BOND)) {
             throw new ActiveInstrumentException("Instrument is not a treasury bond type");
         }
         TreasuryBond treasuryBond = new TreasuryBond();
+        treasuryBond.setInitialContractValue(initialContractValue);
         treasuryBond.setOverallInterest(interest);
         treasuryBond.setTermInMonths(termInMonths);
         financialInstrument.addActiveInstrument(treasuryBond);
         return activeInstrumentRepository.save(treasuryBond);
     }
 
-    public List<TreasuryBond> createTreasuryBonds(FinancialInstrument financialInstrument, double interest, int termInMonths, int quantity) throws ActiveInstrumentException {
+    public List<TreasuryBond> createTreasuryBonds(FinancialInstrument financialInstrument, BigDecimal initialContractValue, double interest, int termInMonths, int quantity) throws ActiveInstrumentException {
         List<TreasuryBond> treasuryBonds = new ArrayList<>();
         for (int i = 0; i < quantity; i++) {
-            treasuryBonds.add(createTreasuryBond(financialInstrument, interest, termInMonths));
+            treasuryBonds.add(createTreasuryBond(financialInstrument, initialContractValue,  interest, termInMonths));
         }
         return treasuryBonds;
     }
@@ -182,7 +183,7 @@ public class ActiveInstrumentService {
 
     private long getContractPassedPeriodInMonths(TreasuryBond treasuryBond) {
         LocalDateTime dateSold = treasuryBond.getDateSold().toLocalDateTime();
-        LocalDateTime now = MarketSimulationService.currentSimulationTimestamp.toLocalDateTime();
+        LocalDateTime now = MarketSimulationService.getCurrentSimulationTimestamp().toLocalDateTime();
         return ChronoUnit.MONTHS.between(now, dateSold);
     }
 }

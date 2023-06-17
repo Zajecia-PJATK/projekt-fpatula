@@ -4,6 +4,7 @@ import com.business.market.simulator.user.User;
 import com.business.market.simulator.user.UserService;
 import jakarta.annotation.PreDestroy;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +31,8 @@ public class MarketSimulationService {
     @Setter(AccessLevel.NONE)
     private final static int[] marketOpenHours = new int[]{14, 21};
     @Setter(AccessLevel.NONE)
-    public static Timestamp currentSimulationTimestamp;
+    private static Timestamp currentSimulationTimestamp;
+    @Setter(AccessLevel.PRIVATE)
     private UserService userService;
     @Setter(AccessLevel.NONE)
     private MarketAlgorithmService marketAlgorithmService;
@@ -40,7 +42,9 @@ public class MarketSimulationService {
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
     @Setter(AccessLevel.NONE)
     private Future<?> runningSimulation;
-
+    @Setter(AccessLevel.NONE)
+    @Getter
+    private static boolean simulationStarted;
     @Autowired
     public MarketSimulationService(MarketAlgorithmService marketAlgorithmService) {
         this.marketAlgorithmService = marketAlgorithmService;
@@ -61,11 +65,15 @@ public class MarketSimulationService {
     }
 
     @Value("${sim.current_time}")
-    public void setCurrentSimulationTimestamp(String stringTimestamp) {
+    private void setCurrentSimulationTimestamp(String stringTimestamp) {
         MarketSimulationService.currentSimulationTimestamp = Timestamp.from(Instant.ofEpochSecond(Long.parseLong(stringTimestamp)));
     }
 
-    public void saveTimestamp(Timestamp newTimestamp) throws SimulationException {
+    public static void setSimulationSpeed(double value) {
+        MarketAlgorithmService.setSimulationsSpeed(value);
+    }
+
+    private void saveTimestamp(Timestamp newTimestamp) throws SimulationException {
         try {
             Properties properties = new Properties();
             properties.setProperty("sim.current_time", newTimestamp.toInstant().toString());
@@ -78,19 +86,19 @@ public class MarketSimulationService {
         }
     }
 
-    public List<User> getSimUsers() {
+    private List<User> getSimUsers() {
         return userService.getUsersContaining("SIM");
     }
 
-    public boolean startSimulation() {
+    public void startSimulation() {
         runningSimulation = executorService.submit(simulationThread);
-        return true;
+        simulationStarted = true;
     }
 
-    public boolean stopSimulation() throws ExecutionException, InterruptedException, TimeoutException {
+    public void stopSimulation() throws ExecutionException, InterruptedException, TimeoutException {
         simulationThread.doStop();
         runningSimulation.get(120, TimeUnit.SECONDS);
-        return true;
+        simulationStarted = false;
     }
 
     public class SimulationThread implements Runnable {

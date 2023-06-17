@@ -16,7 +16,7 @@ public class UserAuthenticationService {
     }
 
     private boolean isStrongPassword(String password) {
-        return password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+        return password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$");
     }
 
     public User registerUser(String username, String password) throws UserAuthenticationException {

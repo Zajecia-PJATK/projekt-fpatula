@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Setter(onMethod_ = @Autowired)
 @Service
@@ -26,5 +27,9 @@ public class OwnerService {
         owner.setOwnerName(name);
         owner.setOwnerType(ownerType);
         return ownerRepository.save(owner);
+    }
+
+    public List<Owner> getAllAssetsOwners(){
+        return ownerRepository.findAll();
     }
 }

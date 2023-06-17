@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 @Setter(onMethod_ = {@Autowired})
@@ -19,21 +20,29 @@ public class FinancialInstrumentService {
     private ActiveInstrumentService activeInstrumentService;
     private MarketTransactionService marketTransactionService;
 
-    public FinancialInstrument createFinancialInstrument(Owner owner, InstrumentType type, String symbol) {
+    public FinancialInstrument createFinancialInstrument(Owner owner, InstrumentType type, String symbol, Sector sector) {
         FinancialInstrument financialInstrument = new FinancialInstrument();
         financialInstrument.setOwningCompany(owner);
         financialInstrument.setType(type);
         financialInstrument.setSymbol(symbol);
+        financialInstrument.setSector(sector);
         return financialInstrumentRepository.save(financialInstrument);
     }
 
     public long getFinancialInstrumentVolume(FinancialInstrument financialInstrument, int periodInDays) {
         return marketTransactionService.getMarketVolumeByFinancialInstrumentInDaysRange(financialInstrument, periodInDays);
     }
+    public List<FinancialInstrument> getAllByType(InstrumentType instrumentType){
+        return financialInstrumentRepository.findAllByTypeEquals(instrumentType);
+    }
+
+    public List<FinancialInstrument> getTreasuryBond(InstrumentType instrumentType){
+        return financialInstrumentRepository.findAllByTypeEquals(instrumentType);
+    }
 
     public double calculateShareChange(FinancialInstrument financialInstrument, int periodInDays) {
         double currentShareValue = activeInstrumentService.getShareCurrentValueByFinancialInstrument(financialInstrument).doubleValue();
-        BigDecimal marketCloseValueDayBefore = (marketTransactionService.getMarketCloseValueFromDaysBefore(financialInstrument, periodInDays));
+        BigDecimal marketCloseValueDayBefore = marketTransactionService.getMarketCloseValueFromDaysBefore(financialInstrument, periodInDays);
         if (Objects.isNull(marketCloseValueDayBefore)) {
             return 0.0;
         }
