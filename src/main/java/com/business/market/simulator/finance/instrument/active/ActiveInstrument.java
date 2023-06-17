@@ -10,6 +10,7 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @Entity(name = "active_instruments")
@@ -28,7 +29,9 @@ public abstract class ActiveInstrument implements Tradeable {
     private List<MarketTransaction> instrumentTransactions = new ArrayList<>();
 
     public void changeCurrentInstrumentOwner(User newOwner) {
-        currentInstrumentOwner.getOwnedInstruments().remove(this);
+        if (Objects.nonNull(currentInstrumentOwner)){
+            currentInstrumentOwner.getOwnedInstruments().remove(this);
+        }
         currentInstrumentOwner = newOwner;
         newOwner.getOwnedInstruments().add(this);
     }

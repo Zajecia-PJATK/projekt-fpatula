@@ -6,9 +6,11 @@ import com.business.market.simulator.finance.owner.Owner;
 import com.business.market.simulator.finance.transaction.MarketTransactionService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,21 +24,21 @@ public class FinancialInstrumentService {
 
     public FinancialInstrument createFinancialInstrument(Owner owner, InstrumentType type, String symbol, Sector sector) {
         FinancialInstrument financialInstrument = new FinancialInstrument();
-        financialInstrument.setOwningCompany(owner);
+        financialInstrument.addOwner(owner);
         financialInstrument.setType(type);
         financialInstrument.setSymbol(symbol);
         financialInstrument.setSector(sector);
-        return financialInstrumentRepository.save(financialInstrument);
+        return financialInstrumentRepository.saveAndFlush(financialInstrument);
     }
 
     public long getFinancialInstrumentVolume(FinancialInstrument financialInstrument, int periodInDays) {
         return marketTransactionService.getMarketVolumeByFinancialInstrumentInDaysRange(financialInstrument, periodInDays);
     }
-    public List<FinancialInstrument> getAllByType(InstrumentType instrumentType){
-        return financialInstrumentRepository.findAllByTypeEquals(instrumentType);
-    }
 
-    public List<FinancialInstrument> getTreasuryBond(InstrumentType instrumentType){
+    public List<FinancialInstrument> saveAll(Collection<FinancialInstrument> financialInstruments){
+        return financialInstrumentRepository.saveAllAndFlush(financialInstruments);
+    }
+    public List<FinancialInstrument> getAllByType(InstrumentType instrumentType){
         return financialInstrumentRepository.findAllByTypeEquals(instrumentType);
     }
 

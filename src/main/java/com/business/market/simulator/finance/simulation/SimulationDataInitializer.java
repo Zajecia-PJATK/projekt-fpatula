@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Setter(onMethod_ = @Autowired)
 @Component
@@ -41,11 +42,13 @@ public class SimulationDataInitializer {
         FinancialInstrument ipl = financialInstrumentService.createFinancialInstrument(interstellarPharmaceuticals, InstrumentType.SHARE, "IPL", Sector.HEALTHCARE);
         FinancialInstrument qi = financialInstrumentService.createFinancialInstrument(quantumaniaIndustries, InstrumentType.SHARE, "QI", Sector.TECHNOLOGY);
         FinancialInstrument bmt = financialInstrumentService.createFinancialInstrument(brightMoonTechnologies, InstrumentType.SHARE, "BMT", Sector.TECHNOLOGY);
+        ownerService.saveOwners(List.of(techCoreSolutions,globalOilEnergyCorp,interstellarPharmaceuticals,quantumaniaIndustries,brightMoonTechnologies));
         activeInstrumentService.createShares(tcs, new BigDecimal("20"),15000);
         activeInstrumentService.createShares(goec, new BigDecimal("10"),10000);
         activeInstrumentService.createShares(ipl, new BigDecimal("5"),10000);
         activeInstrumentService.createShares(qi, new BigDecimal("15"),5000);
         activeInstrumentService.createShares(bmt, new BigDecimal("8"),10000);
+//        financialInstrumentService.saveAll(List.of(tcs, goec, ipl, qi, bmt));
         Owner statesTreasury = ownerService.createOwner("United States Department of the Treasury", OwnerType.TREASURY);
         Owner bankOfEngland = ownerService.createOwner("Bank of England", OwnerType.TREASURY);
         Owner ministryJapan = ownerService.createOwner("Ministry of Finance (Japan)", OwnerType.TREASURY);
@@ -56,11 +59,13 @@ public class SimulationDataInitializer {
         FinancialInstrument jap = financialInstrumentService.createFinancialInstrument(ministryJapan, InstrumentType.TREASURY_BOND, "JAP-GOV23", Sector.FINANCE);
         FinancialInstrument ger = financialInstrumentService.createFinancialInstrument(germanyBank, InstrumentType.TREASURY_BOND, "GER-FED23", Sector.FINANCE);
         FinancialInstrument nbpinf = financialInstrumentService.createFinancialInstrument(NBP, InstrumentType.TREASURY_BOND, "INF-GOV23", Sector.FINANCE);
+        ownerService.saveOwners(List.of(statesTreasury,bankOfEngland,ministryJapan,germanyBank,NBP));
         activeInstrumentService.createTreasuryBonds(tbond, BigDecimal.valueOf(10000),2.5,24,10000);
         activeInstrumentService.createTreasuryBonds(uksov, BigDecimal.valueOf(5000),1.8,12,10000);
         activeInstrumentService.createTreasuryBonds(jap, BigDecimal.valueOf(8500),1.2,6,10000);
         activeInstrumentService.createTreasuryBonds(ger, BigDecimal.valueOf(7000),1.5,6,10000);
         activeInstrumentService.createTreasuryBonds(nbpinf, BigDecimal.valueOf(500),16.0,48,10000);
+//        financialInstrumentService.saveAll(List.of(tbond, uksov, jap, ger, nbpinf));
         userService.createUser("SIM1us","zaq1@WSX",new BigDecimal("100000000000"));
         userService.createUser("SIM2us","zaq1@WSX",new BigDecimal("100000000000"));
         userService.createUser("SIM3us","zaq1@WSX",new BigDecimal("100000000000"));

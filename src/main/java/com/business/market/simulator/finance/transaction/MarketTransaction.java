@@ -22,7 +22,7 @@ public class MarketTransaction {
     private ActiveInstrument targetInstrument;
     private Timestamp transactionTimestamp;
     private BigDecimal transactionValue;
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "transaction_participants",
             joinColumns = @JoinColumn(name = "transactionId"),

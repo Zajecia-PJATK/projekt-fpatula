@@ -2,6 +2,7 @@ package com.business.market.simulator.user;
 
 import com.business.market.simulator.finance.transaction.MarketTransaction;
 import com.business.market.simulator.utils.InputScanner;
+import jakarta.transaction.Transactional;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,7 +59,6 @@ public class UserController {
         }
         return authenticatedUser;
     }
-
     private User login() throws UserAuthenticationException {
         Scanner scn = scanner.getScanner();
         System.out.print("Enter your username: ");
@@ -67,7 +67,6 @@ public class UserController {
         String password = scn.nextLine();
         return userAuthenticationService.loginUser(username, password);
     }
-
     private User register() throws UserAuthenticationException {
         Scanner scn = scanner.getScanner();
         System.out.print("Enter a username: ");
@@ -109,7 +108,8 @@ public class UserController {
         return user;
     }
 
-    private void generateUserDataView(User user) {
+    private User generateUserDataView(User user) {
+        user = userService.getUserByUsername(user.getUsername());
         System.out.println("User: " + user.getUsername());
         System.out.println("Balance: $" + user.getBalance().setScale(3, RoundingMode.HALF_DOWN));
         System.out.println("Portfolio Value: $"+ userService.getPortfolioValue(user).setScale(3,RoundingMode.HALF_DOWN)+"\n");
@@ -122,6 +122,7 @@ public class UserController {
             System.out.printf("%-14s| %-12s| %-12s| %-8s| $%9s%n",
                     transaction.getTransactionTimestamp().toLocalDateTime().format(DateTimeFormatter.ISO_DATE), transaction.getBuyerId(), transaction.getSellerId(), transaction.getTargetInstrument().getFinancialInstrument().getSymbol(), transaction.getTransactionValue().setScale(3,RoundingMode.HALF_DOWN));
         }
+        return user;
     }
 
     public User showUserOptionsMenu(User user) {
@@ -139,7 +140,7 @@ public class UserController {
             switch (option) {
                 case 1 -> user = addToBalance(user);
                 case 2 -> user = withdrawFromBalance(user);
-                case 3 -> generateUserDataView(user);
+                case 3 -> user = generateUserDataView(user);
                 case 0 -> {
                     System.out.println("Returning to main.");
                     show = false;

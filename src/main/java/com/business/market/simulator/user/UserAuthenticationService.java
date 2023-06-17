@@ -1,5 +1,6 @@
 package com.business.market.simulator.user;
 
+import jakarta.transaction.Transactional;
 import lombok.Setter;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ public class UserAuthenticationService {
         return password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$");
     }
 
+    @Transactional
     public User registerUser(String username, String password) throws UserAuthenticationException {
         if (userService.userExists(username)) {
             throw new UserAuthenticationException("User with username: " + username + " already exists");
@@ -34,7 +36,7 @@ public class UserAuthenticationService {
         user.setPasswordHash(DigestUtils.sha3_256Hex(password));
         return userService.persistUser(user);
     }
-
+    @Transactional
     public User loginUser(String username, String password) throws UserAuthenticationException {
         User foundUser;
         if (!userService.userExists(username)) {

@@ -37,11 +37,11 @@ public class OwnerController {
         }
     }
     private void generateOwnersDataView(List<Owner> owners) {
-        System.out.println("Name         |Income       |Profit      |Book Value    |Dividend Per Share");
+        System.out.println("Name                     |Income       |Profit      |Book Value    |Dividend Per Share");
         System.out.println("--------------------------------------------------------------");
         List<OwnerDataRow> dataRows = generateOwnerDataRows(owners);
         for (OwnerDataRow dataRow : dataRows) {
-            System.out.printf("%-15s%-15s%-15s%-15s%-15s%n",
+            System.out.printf("%-25s%-15s%-15s%-15s%-15s%n",
                     dataRow.name, dataRow.income,
                     dataRow.profit, dataRow.bookValue,
                     dataRow.dividendPerShare);
@@ -62,7 +62,9 @@ public class OwnerController {
             if (owner instanceof Company company){
                 this.income = company.getIncome().setScale(0, RoundingMode.HALF_DOWN).toString();
                 this.profit = company.getCompanyProfit().setScale(0, RoundingMode.HALF_DOWN).toString();
-                this.bookValue = company.getBookValue().setScale(2,RoundingMode.HALF_DOWN).toString();
+                if (!company.getOwnerFinancialInstruments().isEmpty()){
+                    this.bookValue = company.getBookValue().setScale(2,RoundingMode.HALF_DOWN).toString();
+                }
                 this.dividendPerShare = company.getDividendsPerShare().toString();
             }
         }

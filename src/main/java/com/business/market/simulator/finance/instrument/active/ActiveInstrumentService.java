@@ -43,7 +43,7 @@ public class ActiveInstrumentService {
         treasuryBond.setOverallInterest(interest);
         treasuryBond.setTermInMonths(termInMonths);
         financialInstrument.addActiveInstrument(treasuryBond);
-        return activeInstrumentRepository.save(treasuryBond);
+        return activeInstrumentRepository.saveAndFlush(treasuryBond);
     }
 
     public List<TreasuryBond> createTreasuryBonds(FinancialInstrument financialInstrument, BigDecimal initialContractValue, double interest, int termInMonths, int quantity) throws ActiveInstrumentException {
@@ -62,7 +62,7 @@ public class ActiveInstrumentService {
         Share share = new Share();
         share.setAskPrice(initialPrice);
         financialInstrument.addActiveInstrument(share);
-        return activeInstrumentRepository.save(share);
+        return activeInstrumentRepository.saveAndFlush(share);
     }
 
     public List<Share> createShares(FinancialInstrument financialInstrument, BigDecimal initialPrice, int quantity) throws ActiveInstrumentException {
@@ -106,7 +106,7 @@ public class ActiveInstrumentService {
         User shareOwner = share.getCurrentInstrumentOwner();
         User.UserOperations buyerOperations = buyer.new UserOperations();
         BigDecimal askPrice = share.getAskPrice();
-        if (buyerOperations.canWithdraw(askPrice)) {
+        if (!buyerOperations.canWithdraw(askPrice)) {
             throw new FinanceOperationException("Balance too low for operation");
         }
         if (Objects.isNull(shareOwner)) {
@@ -137,7 +137,7 @@ public class ActiveInstrumentService {
 
     @Transactional
     public TreasuryBond buyTreasuryBond(TreasuryBond treasuryBond, User buyer, Timestamp transactionTimestamp) throws FinanceOperationException {
-        if (treasuryBond.isBuyable()) {
+        if (!treasuryBond.isBuyable()) {
             throw new FinanceOperationException("Can't buy already contracted treasury bond");
         }
         User.UserOperations buyerOperations = buyer.new UserOperations();

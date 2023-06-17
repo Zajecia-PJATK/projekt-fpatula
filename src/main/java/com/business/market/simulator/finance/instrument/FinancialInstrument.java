@@ -20,7 +20,7 @@ public class FinancialInstrument {
     private InstrumentType type;
     @Enumerated(EnumType.STRING)
     private Sector sector;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE})
     private Owner owningCompany;
     @OneToMany
     private List<ActiveInstrument> marketActiveInstruments = new ArrayList<>();
@@ -28,5 +28,10 @@ public class FinancialInstrument {
     public void addActiveInstrument(ActiveInstrument activeInstrument) {
         marketActiveInstruments.add(activeInstrument);
         activeInstrument.setFinancialInstrument(this);
+    }
+
+    public void addOwner(Owner owner) {
+        owner.getOwnerFinancialInstruments().add(this);
+        owningCompany = owner;
     }
 }

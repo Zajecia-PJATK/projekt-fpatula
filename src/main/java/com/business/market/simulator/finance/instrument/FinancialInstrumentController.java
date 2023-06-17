@@ -1,13 +1,18 @@
 package com.business.market.simulator.finance.instrument;
 
-import com.business.market.simulator.finance.instrument.active.ActiveInstrument;
 import com.business.market.simulator.utils.InputScanner;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import com.business.market.simulator.finance.instrument.FinancialInstrumentListService;
+
 @Setter(onMethod_ = @Autowired)
+@Controller
 public class FinancialInstrumentController {
 
     private InputScanner scanner;
@@ -43,26 +48,30 @@ public class FinancialInstrumentController {
         String choice;
         List<FinancialInstrument> treasuryBonds = financialInstrumentService.getAllByType(InstrumentType.TREASURY_BOND);
         List<FinancialInstrumentListService.TreasuryBondTableRow> treasuryBondTableRows = financialInstrumentListService.generateTreasuryBondTableRows(treasuryBonds);
+
+        Comparator<? super FinancialInstrumentListService.TreasuryBondTableRow> sortingComparator = FinancialInstrumentListService.compareByOwner;
+
         do {
+            treasuryBondTableRows.sort(sortingComparator);
+
             System.out.println("Treasury Bonds Table");
             System.out.println("--------------------");
             System.out.println("|Name\t|Symbol\t|Contract Value\t|Interest Rate\t|Term");
 
-            // Display treasury bonds
-/*            for (FinancialInstrumentListService.TreasuryBondTableRow bond : treasuryBonds) {
+            for (FinancialInstrumentListService.TreasuryBondTableRow bond : treasuryBondTableRows) {
                 System.out.println(bond.getName() + "\t|" + bond.getSymbol() + "\t|" +
-                        bond.getContractValue() + "\t|" + bond.getInterestRate() + "\t" + bond.getTerm());
-            }*/
+                        bond.contractValue() + "\t|" + bond.interestRate() + "\t" + bond.term());
+            }
 
-/*            System.out.println("--------------------");
+            System.out.println("--------------------");
             System.out.println("Filtering and Sorting Options");
             System.out.println("Write f for filtering and s for sorting and add number");
             System.out.println("1. by Name");
             System.out.println("2. by Symbol");
             System.out.println("3. by Contract Value");
-            System.out.println("4. by Interest Rate");
+            System.out.println("4. by Interest");
             System.out.println("5. by Term");
-            System.out.println("0. Back to Main Menu");*/
+            System.out.println("0. Back to Main Menu");
 
             choice = scanner.getScanner().nextLine();
 
@@ -71,15 +80,15 @@ public class FinancialInstrumentController {
                 case "f2" -> Collections.sort(treasuryBonds, Comparator.comparing(TreasuryBond::getSymbol));
                 case "f3" -> Collections.sort(treasuryBonds, Comparator.comparing(TreasuryBond::getContractValue));
                 case "f4" -> Collections.sort(treasuryBonds, Comparator.comparing(TreasuryBond::getInterestRate));
-                case "f5" -> Collections.sort(treasuryBonds, Comparator.comparing(TreasuryBond::getTerm));
-                case "s1" -> Collections.sort(treasuryBonds, Comparator.comparing(TreasuryBond::getName));
-                case "s2" -> Collections.sort(treasuryBonds, Comparator.comparing(TreasuryBond::getSymbol));
-                case "s3" -> Collections.sort(treasuryBonds, Comparator.comparing(TreasuryBond::getContractValue));
-                case "s4" -> Collections.sort(treasuryBonds, Comparator.comparing(TreasuryBond::getInterestRate));
-                case "s5" -> Collections.sort(treasuryBonds, Comparator.comparing(TreasuryBond::getTerm));*/
+                case "f5" -> Collections.sort(treasuryBonds, Comparator.comparing(TreasuryBond::getTerm));*/
+                case "s1" -> sortingComparator = FinancialInstrumentListService.compareByOwner;
+                case "s2" -> sortingComparator = FinancialInstrumentListService.compareBySymbol;
+                case "s3" -> sortingComparator = FinancialInstrumentListService.compareByContractValue;
+                case "s4" -> sortingComparator = FinancialInstrumentListService.compareByInterestRate;
+                case "s5" -> sortingComparator = FinancialInstrumentListService.compareByTerm;
                 case "0" -> {
                     run = false;
-                    System.out.println("Going back to Main Menu...");
+                    System.out.println("Going back to main menu");
                 }
                 default -> System.out.println("Invalid choice. Please try again.");
             }
@@ -91,16 +100,19 @@ public class FinancialInstrumentController {
 
         String choice;
         List<FinancialInstrument> shares = financialInstrumentService.getAllByType(InstrumentType.SHARE);
+        List<FinancialInstrumentListService.ShareTableRow> shareTableRows = financialInstrumentListService.generateShareTableRows(shares);
+
+        Comparator<? super FinancialInstrumentListService.ShareTableRow> sortingComparator = FinancialInstrumentListService.compareByOwner;
 
         do {
+            shareTableRows.sort(sortingComparator);
             System.out.println("Shares Table");
             System.out.println("------------");
             System.out.println("Name\tSymbol\tSector\tCourse Change");
 
-            // Display shares
-/*            for (FinancialInstrumentListService.ShareTableRow share : shares) {
+            for (FinancialInstrumentListService.ShareTableRow share : shareTableRows) {
                 System.out.println(share.getName() + "\t" + share.getSymbol() + "\t" +
-                        share.getSector() + "\t" + share.getCourseChange());
+                        share.sector() + "\t" + share.courseChange());
             }
 
             System.out.println("------------");
@@ -115,17 +127,20 @@ public class FinancialInstrumentController {
             choice = scanner.getScanner().nextLine();
 
             switch (choice) {
-                case "s1" -> Collections.sort(shares, Comparator.comparing(Share::getName));
-                case "s2" -> Collections.sort(shares, Comparator.comparing(Share::getSymbol));
-                case "s3" -> Collections.sort(shares, Comparator.comparing(Share::getSector));
-                case "s4" -> Collections.sort(shares, Comparator.comparing(Share::getCourseChange));
-                case "f1" -> Collections.sort(shares, Comparator.comparing(Share::getName));
+                case "s1" -> sortingComparator = FinancialInstrumentListService.compareByOwner;
+                case "s2" -> sortingComparator = FinancialInstrumentListService.compareBySymbol;
+                case "s3" -> sortingComparator = FinancialInstrumentListService.compareBySector;
+                case "s4" -> sortingComparator = FinancialInstrumentListService.compareByCourseChange;
+/*                case "f1" -> Collections.sort(shares, Comparator.comparing(Share::getName));
                 case "f2" -> Collections.sort(shares, Comparator.comparing(Share::getSymbol));
                 case "f3" -> Collections.sort(shares, Comparator.comparing(Share::getSector));
-                case "f4" -> Collections.sort(shares, Comparator.comparing(Share::getCourseChange));
-                case "0" -> System.out.println("Going back to Main Menu...");
+                case "f4" -> Collections.sort(shares, Comparator.comparing(Share::getCourseChange));*/
+                case "0" ->{
+                    run = false;
+                    System.out.println("Going back to main menu");
+                }
                 default -> System.out.println("Invalid choice. Please try again.");
-            }*/
+            }
         } while (run);
     }
 }

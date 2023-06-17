@@ -1,10 +1,12 @@
 package com.business.market.simulator.finance.owner;
 
+import jakarta.transaction.Transactional;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 
 @Setter(onMethod_ = @Autowired)
@@ -19,16 +21,21 @@ public class OwnerService {
         newCompany.setIncome(new BigDecimal(income));
         newCompany.setLoses(new BigDecimal(losses));
         newCompany.setDividendsPerShare(new BigDecimal(dividendsPerShare));
-        return ownerRepository.save(newCompany);
+        return ownerRepository.saveAndFlush(newCompany);
     }
 
     public Owner createOwner(String name, OwnerType ownerType) {
         Owner owner = new Owner();
         owner.setOwnerName(name);
         owner.setOwnerType(ownerType);
-        return ownerRepository.save(owner);
+        return ownerRepository.saveAndFlush(owner);
     }
 
+    public List<Owner> saveOwners(Collection<Owner> owners){
+        return ownerRepository.saveAllAndFlush(owners);
+    }
+
+    @Transactional
     public List<Owner> getAllAssetsOwners(){
         return ownerRepository.findAll();
     }

@@ -19,7 +19,7 @@ public class Owner implements LegalEntity {
     private String ownerName;
     @Enumerated(EnumType.STRING)
     private OwnerType ownerType;
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.PERSIST})
     private List<FinancialInstrument> ownerFinancialInstruments = new ArrayList<>();
 
     @Override

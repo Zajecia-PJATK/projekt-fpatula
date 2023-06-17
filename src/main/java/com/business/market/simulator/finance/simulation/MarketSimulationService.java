@@ -32,7 +32,7 @@ public class MarketSimulationService {
     private final static int[] marketOpenHours = new int[]{14, 21};
     @Setter(AccessLevel.NONE)
     private static Timestamp currentSimulationTimestamp;
-    @Setter(AccessLevel.PRIVATE)
+    @Setter(value= AccessLevel.PRIVATE, onMethod_ = {@Autowired})
     private UserService userService;
     @Setter(AccessLevel.NONE)
     private MarketAlgorithmService marketAlgorithmService;

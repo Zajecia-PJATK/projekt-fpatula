@@ -31,7 +31,7 @@ public class SimulationController {
                 case 1 -> {
                     if (MarketSimulationService.isSimulationStarted()) {
                         System.out.println("Stopping the simulation.");
-                        marketSimulationService.startSimulation();
+                        marketSimulationService.stopSimulation();
                     } else {
                         System.out.println("Starting the simulation.");
                         marketSimulationService.startSimulation();

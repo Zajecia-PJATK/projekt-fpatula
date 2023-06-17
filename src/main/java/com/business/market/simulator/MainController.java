@@ -40,8 +40,8 @@ public class MainController {
                 System.out.println("2. Go to simulation management");
                 System.out.println("3. Show instruments info");
                 System.out.println("4. Show assets owners info");
-                System.out.println("5. Exit");
-
+                System.out.println("5. Buy financial instruments");
+                System.out.println("6. Exit");
                 choice = scn.nextLine();
 
                 switch (choice) {
@@ -56,13 +56,12 @@ public class MainController {
                     }
                     case "3" -> financialInstrumentController.showFinancialInstrumentTableMenu();
                     case "4" -> ownerController.showOwnersMenu();
-                    case "5" -> {
+                    case "6" -> {
                         System.out.println("Exiting.");
-                        return;
+                        run = false;
                     }
                     default -> {
                         System.out.println("Invalid choice. Please try again.");
-                        run = false;
                     }
                 }
 

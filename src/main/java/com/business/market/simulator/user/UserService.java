@@ -38,20 +38,12 @@ public class UserService {
     }
 
     public User getUserByUsername(String username) {
-        return userRepository.findUserByUsername(username);
-    }
-
-    public BigDecimal getBalance(User user) {
-        return user.getBalance();
+        return userRepository.findUserDetailedByUsername(username);
     }
 
     public BigDecimal getPortfolioValue(User user) {
         List<ActiveInstrument> ownedInstruments = user.getOwnedInstruments();
         return ownedInstruments.parallelStream().map(ownedInstrument -> financeService.getMarketValue(ownedInstrument)).reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public Set<MarketTransaction> userTransactions(User user) {
-        return user.getUserTransactions();
     }
 
     public User withdrawFromUserBalance(User user, BigDecimal amount){

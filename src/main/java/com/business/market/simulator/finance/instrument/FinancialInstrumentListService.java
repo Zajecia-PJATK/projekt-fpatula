@@ -69,7 +69,7 @@ public class FinancialInstrumentListService {
     List<TreasuryBondTableRow> generateTreasuryBondTableRows(Collection<FinancialInstrument> treasuryBonds){
         List<TreasuryBondTableRow> treasuryBondTableRows = new ArrayList<>();
         for (FinancialInstrument treasuryBond:treasuryBonds) {
-            TreasuryBond exampleBond = (TreasuryBond)treasuryBond.getMarketActiveInstruments().get(0);
+            TreasuryBond exampleBond = (TreasuryBond) treasuryBond.getMarketActiveInstruments().get(0);
             treasuryBondTableRows.add(new TreasuryBondTableRow(treasuryBond.getOwningCompany().getOwnerName(),treasuryBond.getSymbol(),exampleBond.getInitialContractValue(), exampleBond.getOverallInterest(),exampleBond.getTermInMonths()));
         }
         return treasuryBondTableRows;

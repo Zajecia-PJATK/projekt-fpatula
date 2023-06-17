@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     @EntityGraph(attributePaths = {"ownedInstruments", "userTransactions"})
-    User findUserByUsername(String username);
+    User findUserDetailedByUsername(String username);
 
     boolean existsByUsername(String username);
 
     boolean deleteUserByUserId(Long userId);
-    @EntityGraph(attributePaths = {"ownedInstruments"})
+    @EntityGraph(attributePaths = {"ownedInstruments", "userTransactions"})
     List<User> findByUsernameContaining(String namePart);
 }

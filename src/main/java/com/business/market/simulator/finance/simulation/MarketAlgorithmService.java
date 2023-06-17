@@ -19,6 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.business.market.simulator.finance.simulation.MarketSimulationService.increaseTimestampByMinutes;
+import static java.lang.Thread.sleep;
 
 @Service
 public class MarketAlgorithmService {
@@ -82,14 +83,18 @@ public class MarketAlgorithmService {
         PriorityQueue<ActiveInstrument> instrumentsQueue = new PriorityQueue<>(Tradeable::compareTo);
         if (activeInstrumentsChoose < treasuryBondOperationChances[0]) {
             Map<String, List<TreasuryBond>> treasuryBondGrouped = getTreasuryBondGrouped(userActiveInstruments);
-            String[] bondKeys = treasuryBondGrouped.keySet().toArray(new String[0]);
-            int chosenInstrumentIndex = random.nextInt(bondKeys.length);
-            instrumentsQueue.addAll(treasuryBondGrouped.get(bondKeys[chosenInstrumentIndex]));
+            if (!treasuryBondGrouped.isEmpty()) {
+                String[] bondKeys = treasuryBondGrouped.keySet().toArray(new String[0]);
+                int chosenInstrumentIndex = random.nextInt(bondKeys.length);
+                instrumentsQueue.addAll(treasuryBondGrouped.get(bondKeys[chosenInstrumentIndex]));
+            }
         } else {
             Map<String, List<Share>> sharesGrouped = getSharesGrouped(userActiveInstruments);
-            String[] shareKeys = sharesGrouped.keySet().toArray(new String[0]);
-            int chosenInstrumentIndex = random.nextInt(shareKeys.length);
-            instrumentsQueue.addAll(sharesGrouped.get(shareKeys[chosenInstrumentIndex]));
+            if (!sharesGrouped.isEmpty()){
+                String[] shareKeys = sharesGrouped.keySet().toArray(new String[0]);
+                int chosenInstrumentIndex = random.nextInt(shareKeys.length);
+                instrumentsQueue.addAll(sharesGrouped.get(shareKeys[chosenInstrumentIndex]));
+            }
         }
         while (instrumentsQueue.peek() != null && remainingOperations > 0) {
             try {
@@ -115,14 +120,18 @@ public class MarketAlgorithmService {
 
         if (activeInstrumentsChoose < treasuryBondOperationChances[1]) {
             Map<String, List<TreasuryBond>> treasuryBondGrouped = getTreasuryBondGrouped(buyableInstruments);
-            String[] bondKeys = treasuryBondGrouped.keySet().toArray(new String[0]);
-            int chosenInstrumentIndex = random.nextInt(bondKeys.length);
-            instrumentsQueue.addAll(treasuryBondGrouped.get(bondKeys[chosenInstrumentIndex]));
+            if (!treasuryBondGrouped.isEmpty()){
+                String[] bondKeys = treasuryBondGrouped.keySet().toArray(new String[0]);
+                int chosenInstrumentIndex = random.nextInt(bondKeys.length);
+                instrumentsQueue.addAll(treasuryBondGrouped.get(bondKeys[chosenInstrumentIndex]));
+            }
         } else {
             Map<String, List<Share>> sharesGrouped = getSharesGrouped(buyableInstruments);
-            String[] shareKeys = sharesGrouped.keySet().toArray(new String[0]);
-            int chosenInstrumentIndex = random.nextInt(shareKeys.length);
-            instrumentsQueue.addAll(sharesGrouped.get(shareKeys[chosenInstrumentIndex]));
+            if (!sharesGrouped.isEmpty()){
+                String[] shareKeys = sharesGrouped.keySet().toArray(new String[0]);
+                int chosenInstrumentIndex = random.nextInt(shareKeys.length);
+                instrumentsQueue.addAll(sharesGrouped.get(shareKeys[chosenInstrumentIndex]));
+            }
         }
         while (instrumentsQueue.peek() != null && remainingOperations > 0) {
             try {
@@ -178,7 +187,7 @@ public class MarketAlgorithmService {
     public void updateMarket() {
         increaseTimestampByMinutes(minutesPerMarketRound);
         try {
-            wait((long) (5000 / simulationsSpeed));
+            sleep((long) (5000 / simulationsSpeed));
         } catch (InterruptedException e) {
             System.err.println(e.getMessage());
             throw new RuntimeException(new SimulationException("Unexpected simulation interruption"));

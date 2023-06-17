@@ -20,7 +20,7 @@ public interface ActiveInstrumentRepository extends JpaRepository<ActiveInstrume
     @Query("select a from active_instruments a where a.currentInstrumentOwner.userId = :id")
     List<ActiveInstrument> findAllByCurrentInstrumentOwner(@Param("id") Long userId);
 
-    @Query("select a from active_instruments a where (a.currentInstrumentOwner.userId <> :id and a.type='SHARE') or (a.type = 'TREASURY_BOND' and a.dateSold is null)")
+    @Query("select a from active_instruments a where ((a.currentInstrumentOwner.userId <> :id or a.currentInstrumentOwner.userId is null) and a.type='SHARE') or (a.type = 'TREASURY_BOND' and a.dateSold is null)")
     List<ActiveInstrument> findAllBuyableInstrumentsByUser(@Param("id") Long userId);
 
     @Query("select a1 from active_instruments a1 where a1.financialInstrument.symbol = :symbol and a1.currentInstrumentOwner.userId <> :uid and CAST(a1.askPrice as double) = (select MIN(CAST(a2.askPrice as double)) from active_instruments a2 where a2.financialInstrument.instrumentId = :instrumentId and a2.type = 'SHARE' and a2.currentInstrumentOwner.userId <> :uid )")
